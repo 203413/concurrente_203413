@@ -12,10 +12,11 @@ import threading
 import time
 mutex = threading.Lock()
 mutex2= threading.Lock()
+import random
 
 PERSONAS = 3
 PRODUCTORES = 1
-ALMACEN = 10
+ALMACEN = ['P','P','P','P','P','P','P','P','P','P']
 
 IT = 10
 
@@ -25,7 +26,9 @@ def productores(caso):
         global ALMACEN
         PRODUCTORES = PRODUCTORES + 1
         nProductos=PRODUCTORES*10
-        ALMACEN = ALMACEN + nProductos
+        #ALMACEN = ALMACEN + nProductos
+        for i in range (0,nProductos):
+            ALMACEN.append('P')
         print('⚠ Demanda muy alta ⚠  añadiendo nuevo productor. Hay '+str(nProductos)+' productos nuevos en el almacen')
     else:
         return PRODUCTORES
@@ -34,20 +37,24 @@ def almacen(caso):
     global ALMACEN
     global PERSONAS
     if (caso==1):
-        return ALMACEN
+        return len(ALMACEN)
     else:
-        ALMACEN = ALMACEN - PERSONAS
+        #ALMACEN = ALMACEN - PERSONAS
+        longitud=0
+        for i in range(0,PERSONAS):
+            longitud=len(ALMACEN)
+            longitud=longitud-1
+            numero=random.randint(0,longitud)
+            ALMACEN.pop(0)
 
 def consume(caso):
     global PERSONAS
-    global ALMACEN
     if(caso==1):
         PERSONAS = PERSONAS + 1
     else:
         return PERSONAS
 
 class Proceso(threading.Thread):
-
     def __init__(self,id):
         threading.Thread.__init__(self)
         self.id = id
